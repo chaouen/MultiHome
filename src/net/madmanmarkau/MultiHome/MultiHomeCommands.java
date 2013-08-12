@@ -190,12 +190,8 @@ public class MultiHomeCommands {
 			int maxHomes = Settings.getSettingMaxHomes(player);
 			double amount = 0;
 
-			// send to debug message
-			Messaging.sendSuccess(player, "Debug: Get World Name is " + world);
 			if (Settings.getDenyWorld(world)) {
 				Settings.sendMessageDenyWorld(player);
-				// send to debug message
-				Messaging.sendSuccess(player, "Can not use /sethome command in this world.");
 				return;
 			}
 
@@ -234,9 +230,15 @@ public class MultiHomeCommands {
 
 	public static void setNamedHome(MultiHome plugin, Player player, String home) {
 		if (HomePermissions.has(player, "multihome.namedhome.set")) {
+			String world = player.getWorld().getName();
 			int numHomes = plugin.getHomeManager().getUserHomeCount(player);
 			int maxHomes = Settings.getSettingMaxHomes(player);
 			double amount = 0;
+
+			if (Settings.getDenyWorld(world)) {
+				Settings.sendMessageDenyWorld(player);
+				return;
+			}
 
 			if (numHomes < maxHomes || maxHomes == -1 || plugin.getHomeManager().getHome(player, home) != null) {
 				//Check for economy first - and make sure the player either has permission for free homes or has enough money
