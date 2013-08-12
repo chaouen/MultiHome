@@ -12,7 +12,7 @@ public class MultiHomeCommands {
 	public static void goDefaultHome(MultiHome plugin, Player player) {
 		if (HomePermissions.has(player, "multihome.defaulthome.go")) {
 			double amount = 0;
-			
+
 			//Check for economy first - and make sure the player either has permission for free homes or has enough money
 			if (Settings.isEconomyEnabled() && !HomePermissions.has(player, "multihome.free.defaulthome.go")) {
 				if (!MultiHomeEconManager.hasEnough(player.getName(), Settings.getHomeCost(player))) {
@@ -22,7 +22,7 @@ public class MultiHomeCommands {
 					amount = Settings.getHomeCost(player);
 				}
 			}
-			
+
 			// Get user cooldown timer.
 			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
@@ -68,7 +68,7 @@ public class MultiHomeCommands {
 	public static void goNamedHome(MultiHome plugin, Player player, String home) {
 		if (HomePermissions.has(player, "multihome.namedhome.go")) {
 			double amount = 0;
-			
+
 			// Get user cooldown timer.
 			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
@@ -86,7 +86,7 @@ public class MultiHomeCommands {
 					amount = Settings.getNamedHomeCost(player);
 				}
 			}
-		
+
 			int warmupTime = Settings.getSettingWarmup(player);
 			HomeEntry homeEntry = plugin.getHomeManager().getHome(player, home);
 
@@ -107,7 +107,7 @@ public class MultiHomeCommands {
 							Settings.sendMessageDeductForHome(player, amount);
 						}
 					}
-					
+
 					Util.teleportPlayer(player, homeEntry.getHomeLocation(plugin.getServer()), plugin);
 
 					int cooldownTime = Settings.getSettingCooldown(player);
@@ -124,7 +124,7 @@ public class MultiHomeCommands {
 	public static void goPlayerNamedHome(MultiHome plugin, Player player, String owner, String home) {
 		if (HomePermissions.has(player, "multihome.othershome.go") || plugin.getInviteManager().getInvite(owner, home, player.getName()) != null) {
 			double amount = 0;
-			
+
 			// Get user cooldown timer.
 			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
@@ -157,7 +157,7 @@ public class MultiHomeCommands {
 						Messaging.logInfo("Player " + player.getName() + " warped to player " + owner + "'s home location: " + home, plugin);
 					} else {
 						// Can transfer instantly
-						
+
 						//Double Check the charge before teleporting the player
 						if (!HomePermissions.has(player, "multihome.free.othershome.go") && amount != 0) {
 							if (!MultiHomeEconManager.chargePlayer(player.getName(), amount)) {
@@ -185,9 +185,20 @@ public class MultiHomeCommands {
 
 	public static void setDefaultHome(MultiHome plugin, Player player) {
 		if (HomePermissions.has(player, "multihome.defaulthome.set")) {
+			String world = player.getWorld().getName();
 			int numHomes = plugin.getHomeManager().getUserHomeCount(player);
 			int maxHomes = Settings.getSettingMaxHomes(player);
 			double amount = 0;
+
+			// send to debug message
+			Messaging.sendSuccess(player, "Debug: Get World Name is " + world);
+			if (Settings.getDenyWorld(world)) {
+				Settings.sendMessageDenyWorld(player);
+				// send to debug message
+				Messaging.sendSuccess(player, "Can not use /sethome command in this world.");
+				return;
+			}
+
 
 			if (numHomes < maxHomes || maxHomes == -1 || plugin.getHomeManager().getHome(player, "") != null) {
 				//Check for economy first - and make sure the player either has permission for free homes or has enough money
