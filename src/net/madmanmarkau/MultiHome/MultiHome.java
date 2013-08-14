@@ -2,8 +2,6 @@ package net.madmanmarkau.MultiHome;
 
 import java.io.File;
 
-import net.madmanmarkau.MultiHome.Data.*;
-
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,29 +41,23 @@ public class MultiHome extends JavaPlugin {
 		Settings.loadSettings();
 		MultiHomeEconManager.initialize(this);
 
+		this.warmups = new WarmUpManager(new File(pluginDataPath + "warmups.txt"), this);
+		this.cooldowns = new CoolDownManager(new File(pluginDataPath + "cooldowns.txt"), this);
+		
+		this.warmups.loadWarmups();
+		this.cooldowns.loadCooldowns();
+
 		dataStoreMethod = Settings.getDataStoreMethod();
 
 		if (dataStoreMethod.compareToIgnoreCase("file") == 0) {
 			this.homes = new HomeManagerFile(this);
 			this.invites = new InviteManagerFile(this);
-			this.warmups = new WarmUpManagerFile(this);
-			this.cooldowns = new CoolDownManagerFile(this);
-
-			Messaging.logInfo("Using \"file\" storage method for database.", this);
 		} else if (dataStoreMethod.compareToIgnoreCase("sql") == 0) {
 			this.homes = new HomeManagerMySQL(this);
 			this.invites = new InviteManagerMySQL(this);
-			this.warmups = new WarmUpManagerMySQL(this);
-			this.cooldowns = new CoolDownManagerMySQL(this);
-
-			Messaging.logInfo("Using \"sql\" storage method for database.", this);
 		} else {
 			this.homes = new HomeManagerFile(this);
 			this.invites = new InviteManagerFile(this);
-			this.warmups = new WarmUpManagerFile(this);
-			this.cooldowns = new CoolDownManagerFile(this);
-
-			Messaging.logInfo("Unknown storage method. Defaulting to \"file\" storage method for database.", this);
 		}
 
 		

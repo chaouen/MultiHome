@@ -1,4 +1,4 @@
-package net.madmanmarkau.MultiHome.Data;
+package net.madmanmarkau.MultiHome;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import net.madmanmarkau.MultiHome.Messaging;
-import net.madmanmarkau.MultiHome.MultiHome;
-import net.madmanmarkau.MultiHome.Util;
 
 /**
  * @author MadManMarkAu
@@ -31,8 +27,6 @@ public class InviteManagerFile extends InviteManager {
 	@Override
 	public void clearInvites() {
 		this.inviteEntries.clear();
-
-		saveInvites();
 	}
 
 	@Override
@@ -259,6 +253,7 @@ public class InviteManagerFile extends InviteManager {
 			writer.close();
 		} catch (Exception e) {
 			Messaging.logSevere("Could not write the invites file.", this.plugin);
+			e.printStackTrace();
 		}
 	}
 
@@ -279,7 +274,9 @@ public class InviteManagerFile extends InviteManager {
 				out.write(Util.newLine());
 				out.close();
 			} catch (Exception e) {
-				Messaging.logSevere("Could not write the deafult invites file.", this.plugin);
+				Messaging.logSevere("Could not write the deafult invites file. Plugin disabled.", this.plugin);
+				e.printStackTrace();
+				plugin.getServer().getPluginManager().disablePlugin(plugin);
 				return;
 			}
 		} else {
@@ -289,7 +286,7 @@ public class InviteManagerFile extends InviteManager {
 	
 				String line = reader.readLine().trim();
 	
-				this.inviteEntries.clear();
+				this.clearInvites();
 				
 				while (line != null) {
 					if (!line.startsWith("#") && line.length() > 0) {
@@ -330,6 +327,8 @@ public class InviteManagerFile extends InviteManager {
 				reader.close();
 			} catch (Exception e) {
 				Messaging.logSevere("Could not read the invite list.", this.plugin);
+				e.printStackTrace();
+				return;
 			}
 		}
 	}

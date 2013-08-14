@@ -1,4 +1,4 @@
-package net.madmanmarkau.MultiHome.Data;
+package net.madmanmarkau.MultiHome;
 
 import java.util.Date;
 
@@ -46,7 +46,7 @@ public class InviteEntry {
 	}
 
 	public String getInviteSource() {
-		return this.inviteSource;
+		return inviteSource;
 	}
 
 	public void setInviteHome(String inviteHome) {
@@ -54,7 +54,7 @@ public class InviteEntry {
 	}
 
 	public String getInviteHome() {
-		return this.inviteHome;
+		return inviteHome;
 	}
 
 	public void setInviteTarget(String inviteTarget) {
@@ -62,7 +62,7 @@ public class InviteEntry {
 	}
 	
 	public String getInviteTarget() {
-		return this.inviteTarget;
+		return inviteTarget;
 	}
 
 	public void setInviteExpires(Date inviteExpires) {
@@ -70,7 +70,7 @@ public class InviteEntry {
 	}
 
 	public Date getInviteExpires() {
-		return this.inviteExpires;
+		return inviteExpires;
 	}
 
 	public void setInviteReason(String inviteReason) {
@@ -78,7 +78,7 @@ public class InviteEntry {
 	}
 
 	public String getInviteReason() {
-		return this.inviteReason;
+		return inviteReason;
 	}
 	
 }

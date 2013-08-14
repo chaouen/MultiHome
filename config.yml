@@ -75,7 +75,7 @@ MultiHome:
         homeListInvitesToOthers: 'Invites you have open: {LIST}'
         econNotEnoughFunds: 'You did not have {AMOUNT} to do that.'
         econDeductedForHome: '{AMOUNT} was removed from your account for going home.'
-        econDeductForSet: '{AMOUNT} was removed from your account for setting a home.'
+        econDeductedForSet: '{AMOUNT} was removed from your account for setting a home.'
         econNotEnoughFunds: 'You did not have {AMOUNT} to do that.'
     default:
         warmup: 0

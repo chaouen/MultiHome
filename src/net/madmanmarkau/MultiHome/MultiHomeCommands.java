@@ -3,8 +3,6 @@ package net.madmanmarkau.MultiHome;
 import java.util.ArrayList;
 import java.util.Date;
 
-import net.madmanmarkau.MultiHome.Data.*;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,10 +22,10 @@ public class MultiHomeCommands {
 			}
 
 			// Get user cooldown timer.
-			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
+			Date cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
 			if (cooldown != null && !HomePermissions.has(player, "multihome.ignore.cooldown")) {
-				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getExpiry().getTime() - new Date().getTime()), 1000) / 1000);
+				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getTime() - new Date().getTime()), 1000) / 1000);
 				return;
 			}
 
@@ -37,8 +35,8 @@ public class MultiHomeCommands {
 			if (homeEntry != null) {
 				if (warmupTime > 0 && !HomePermissions.has(player, "multihome.ignore.warmup")) {
 					// Warpup required.
-					WarmUpEntry warmup = new WarmUpEntry(player.getName(), Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
-					plugin.getWarmUpManager().addWarmup(warmup);
+					HomeWarmUp warmup = new HomeWarmUp(plugin, player, Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
+					plugin.getWarmUpManager().addWarmup(player.getName(), warmup);
 					Settings.sendMessageWarmup(player, warmupTime);
 				} else {
 					// Can transfer instantly
@@ -70,10 +68,10 @@ public class MultiHomeCommands {
 			double amount = 0;
 
 			// Get user cooldown timer.
-			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
+			Date cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
 			if (cooldown != null && !HomePermissions.has(player, "multihome.ignore.cooldown")) {
-				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getExpiry().getTime() - new Date().getTime()), 1000) / 1000);
+				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getTime() - new Date().getTime()), 1000) / 1000);
 				return;
 			}
 
@@ -93,8 +91,8 @@ public class MultiHomeCommands {
 			if (homeEntry != null) {
 				if (warmupTime > 0 && !HomePermissions.has(player, "multihome.ignore.warmup")) {
 					// Warpup required.
-					WarmUpEntry warmup = new WarmUpEntry(player.getName(), Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
-					plugin.getWarmUpManager().addWarmup(warmup);
+					HomeWarmUp warmup = new HomeWarmUp(plugin, player, Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
+					plugin.getWarmUpManager().addWarmup(player.getName(), warmup);
 					Settings.sendMessageWarmup(player, warmupTime);
 				} else {
 					// Can transfer instantly
@@ -126,10 +124,10 @@ public class MultiHomeCommands {
 			double amount = 0;
 
 			// Get user cooldown timer.
-			CoolDownEntry cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
+			Date cooldown = plugin.getCoolDownManager().getCooldown(player.getName());
 
 			if (cooldown != null && !HomePermissions.has(player, "multihome.ignore.cooldown")) {
-				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getExpiry().getTime() - new Date().getTime()), 1000) / 1000);
+				Settings.sendMessageCooldown(player, Math.max((int) (cooldown.getTime() - new Date().getTime()), 1000) / 1000);
 				return;
 			}
 
@@ -151,8 +149,8 @@ public class MultiHomeCommands {
 				if (homeEntry != null) {
 					if (warmupTime > 0 && !HomePermissions.has(player, "multihome.ignore.warmup")) {
 						// Warpup required.
-						WarmUpEntry warmup = new WarmUpEntry(player.getName(), Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
-						plugin.getWarmUpManager().addWarmup(warmup);
+						HomeWarmUp warmup = new HomeWarmUp(plugin, player, Util.dateInFuture(warmupTime), homeEntry.getHomeLocation(plugin.getServer()), amount);
+						plugin.getWarmUpManager().addWarmup(player.getName(), warmup);
 						Settings.sendMessageWarmup(player, warmupTime);
 						Messaging.logInfo("Player " + player.getName() + " warped to player " + owner + "'s home location: " + home, plugin);
 					} else {
@@ -195,7 +193,6 @@ public class MultiHomeCommands {
 				return;
 			}
 
-
 			if (numHomes < maxHomes || maxHomes == -1 || plugin.getHomeManager().getHome(player, "") != null) {
 				//Check for economy first - and make sure the player either has permission for free homes or has enough money
 				if (Settings.isEconomyEnabled() && !HomePermissions.has(player, "multihome.free.defaulthome.set")) {
@@ -212,7 +209,7 @@ public class MultiHomeCommands {
 					if (!MultiHomeEconManager.chargePlayer(player.getName(), amount)) {
 						return;
 					} else {
-						Settings.sendMessageDeductForHome(player, amount);
+						Settings.sendMessageDeductForSet(player, amount);
 					}
 				}
 
@@ -256,7 +253,7 @@ public class MultiHomeCommands {
 					if (!MultiHomeEconManager.chargePlayer(player.getName(), amount)) {
 						return;
 					} else {
-						Settings.sendMessageDeductForHome(player, amount);
+						Settings.sendMessageDeductForSet(player, amount);
 					}
 				}
 
@@ -435,7 +432,7 @@ public class MultiHomeCommands {
 
 				Player targetPlayer = Util.getExactPlayer(target, plugin);
 				if (targetPlayer != null) {
-					Settings.sendMessageUninviteTargetHome(targetPlayer, player.getName(), "[Default]");
+					Settings.sendMessageUninviteTargetHome(targetPlayer, player.getName(), "");
 				}
 
 				Messaging.logInfo("Player " + player.getName() + " removed invite for " + target + " to their default home.", plugin);

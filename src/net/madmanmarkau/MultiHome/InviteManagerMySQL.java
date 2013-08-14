@@ -1,4 +1,4 @@
-package net.madmanmarkau.MultiHome.Data;
+package net.madmanmarkau.MultiHome;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,8 +9,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
-
-import net.madmanmarkau.MultiHome.*;
 
 
 public class InviteManagerMySQL extends InviteManager {
@@ -28,7 +26,7 @@ public class InviteManagerMySQL extends InviteManager {
 
 		// Test connection
 		try {
-			Connection connection = DriverManager.getConnection(this.url, this.user, this.password);
+			Connection connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			} else {
@@ -46,7 +44,7 @@ public class InviteManagerMySQL extends InviteManager {
 		PreparedStatement statement = null;
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -78,7 +76,7 @@ public class InviteManagerMySQL extends InviteManager {
 		ResultSet resultSet = null;
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -135,7 +133,7 @@ public class InviteManagerMySQL extends InviteManager {
 		boolean exists = false;
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -143,7 +141,7 @@ public class InviteManagerMySQL extends InviteManager {
 			statement = connection.prepareStatement("SELECT COUNT(*) FROM `invites` WHERE LOWER(`source`) = LOWER(?) AND LOWER(`home`) = LOWER(?) AND LOWER(`target`) = LOWER(?);");
 			statement.setString(1, owner);
 			statement.setString(2, home);
-			statement.setString(3, target);
+			statement.setString(2, target);
 			resultSet = statement.executeQuery();
 			if (resultSet.first()) {
 				exists = resultSet.getInt(1) > 0;
@@ -206,7 +204,7 @@ public class InviteManagerMySQL extends InviteManager {
 		PreparedStatement statement = null;
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -245,7 +243,7 @@ public class InviteManagerMySQL extends InviteManager {
 		ArrayList<InviteEntry> output = new ArrayList<InviteEntry> ();
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -299,7 +297,7 @@ public class InviteManagerMySQL extends InviteManager {
 		ArrayList<InviteEntry> output = new ArrayList<InviteEntry> ();
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
@@ -355,14 +353,14 @@ public class InviteManagerMySQL extends InviteManager {
 		boolean recordExists;
 
 		try {
-			connection = DriverManager.getConnection(this.url, this.user, this.password);
+			connection = DriverManager.getConnection(url, user, password);
 			if (!connection.isValid(100)) {
 				throw new SQLException();
 			}
 
 			updateInviteExpiry(connection);
 
-			statementExists = connection.prepareStatement("SELECT COUNT(*) FROM `invites` WHERE LOWER(`source`) = LOWER(?) AND LOWER(`home`) = LOWER(?) AND LOWER(`target`) = LOWER(?);");
+			statementExists = connection.prepareStatement("SELECT COUNT(`id`) FROM `invites` WHERE LOWER(`source`) = LOWER(?) AND LOWER(`home`) = LOWER(?) AND LOWER(`target`) = LOWER(?);");
 			statementInsert = connection.prepareStatement("INSERT INTO `invites` (`source`, `home`, `target`, `expires`, `reason`) VALUES (?, ?, ?, ?, ?)");
 			statementUpdate = connection.prepareStatement("UPDATE `invites` SET `source` = ?, `home` = ?, `target` = ?, `expires` = ?, `reason` = ? WHERE LOWER(`source`) = LOWER(?) AND LOWER(`home`) = LOWER(?) AND LOWER(`target`) = LOWER(?);");
 		

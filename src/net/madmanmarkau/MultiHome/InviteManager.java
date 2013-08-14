@@ -1,9 +1,7 @@
-package net.madmanmarkau.MultiHome.Data;
+package net.madmanmarkau.MultiHome;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import net.madmanmarkau.MultiHome.MultiHome;
 
 import org.bukkit.entity.Player;
 

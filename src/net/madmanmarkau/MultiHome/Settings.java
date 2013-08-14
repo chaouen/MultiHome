@@ -122,6 +122,14 @@ public class Settings {
 		if (message != null) Messaging.sendSuccess(sender, message);
 	}
 
+	public static void sendMessageDenyWorld(CommandSender sender) {
+		String message = plugin.getConfig().getString("MultiHome.messages.denyWorldMessage", null);
+
+		if (message != null) {
+			Messaging.sendError(sender, message);
+		}
+	}
+
 	public static void sendMessageDefaultHomeSet(CommandSender sender) {
 		String message = plugin.getConfig().getString("MultiHome.messages.defaultHomeSetMessage", null);
 
@@ -132,14 +140,6 @@ public class Settings {
 		String message = plugin.getConfig().getString("MultiHome.messages.cannotDeleteDefaultHomeMessage", null);
 
 		if (message != null) Messaging.sendError(sender, message);
-	}
-
-	public static void sendMessageDenyWorld(CommandSender sender) {
-		String message = plugin.getConfig().getString("MultiHome.messages.denyWorldMessage", null);
-
-		if (message != null) {
-			Messaging.sendError(sender, message);
-		}
 	}
 
 	public static void sendMessageHomeSet(CommandSender sender, String home) {
@@ -330,21 +330,21 @@ public class Settings {
 		String message = plugin.getConfig().getString("MultiHome.messages.econNotEnoughFunds", null);
 
 		if (message != null) {
-			Messaging.sendError(player, message.replaceAll("\\{AMOUNT\\}", amount+""));
+			Messaging.sendError(player, message.replaceAll("\\{AMOUNT\\}", (int)amount+""));
 		}
 	}
 
 	public static void sendMessageDeductForHome(Player player, double amount) {
 		String message = plugin.getConfig().getString("MultiHome.messages.econDeductedForHome", null);
 		if (message != null) {
-			Messaging.sendSuccess(player,message.replaceAll("\\{AMOUNT\\}", amount+""));
+			Messaging.sendSuccess(player,message.replaceAll("\\{AMOUNT\\}", (int)amount+""));
 		}
 	}
 
 	public static void sendMessageDeductForSet(Player player, double amount) {
 		String message = plugin.getConfig().getString("MultiHome.messages.econDeductedForSet", null);
 		if (message != null) {
-			Messaging.sendSuccess(player, message.replaceAll("\\{AMOUNT\\}", amount+""));
+			Messaging.sendSuccess(player, message.replaceAll("\\{AMOUNT\\}", (int)amount+""));
 		}
 	}
 }

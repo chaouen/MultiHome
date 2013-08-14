@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.madmanmarkau.MultiHome.Data.HomeEntry;
-import net.madmanmarkau.MultiHome.Data.InviteEntry;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

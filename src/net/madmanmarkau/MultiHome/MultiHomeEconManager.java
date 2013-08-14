@@ -20,7 +20,7 @@ public class MultiHomeEconManager {
 
 	protected static void initialize(MultiHome plugin) {
 		MultiHomeEconManager.plugin = plugin;
-		
+
 		if (Settings.isEconomyEnabled()) {
 			Plugin pRegister = plugin.getServer().getPluginManager().getPlugin("Register");
 
@@ -37,7 +37,7 @@ public class MultiHomeEconManager {
 				Messaging.logInfo("Economy enabled using: Vault", plugin);
 				return;
 	        }
-			
+
 			handler = EconomyHandler.NONE;
 			Messaging.logWarning("An economy plugin wasn't detected!", plugin);
 		} else {
@@ -50,20 +50,20 @@ public class MultiHomeEconManager {
 		switch (handler) {
 		case REGISTER:
 			Method method = Methods.getMethod();
-			
+
 			if (method != null) {
 				return method.getAccount(player).hasEnough(amount);
 			} else {
 				return true;
 			}
-			
+
 		case VAULT:
 			if (vault != null) {
 				return vault.has(player, amount);
 			}
 			break;
 		}
-		
+
 		return true;
 	}
 
@@ -73,17 +73,17 @@ public class MultiHomeEconManager {
 		case REGISTER:
 			if (hasEnough(player, amount)) {
 				Method method = Methods.getMethod();
-				
+
 				if (method != null) {
 					method.getAccount(player).subtract(amount);
 				}
 				return true;
 			} else
 				return false;
-			
+
 		case VAULT:
 			if (vault != null) {
-				return vault.bankWithdraw(player, amount).transactionSuccess();
+				return vault.withdrawPlayer(player, amount).transactionSuccess();
 			}
 			break;
 		}
@@ -96,13 +96,13 @@ public class MultiHomeEconManager {
 		switch (handler) {
 		case REGISTER:
 			Method method = Methods.getMethod();
-			
+
 			if (method != null) {
 				return Methods.getMethod().format(amount);
 			} else {
 				return amount+"";
 			}
-			
+
 		case VAULT:
 			if (vault != null) {
 				return vault.format(amount);

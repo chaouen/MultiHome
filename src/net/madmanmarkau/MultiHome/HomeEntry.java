@@ -1,4 +1,4 @@
-package net.madmanmarkau.MultiHome.Data;
+package net.madmanmarkau.MultiHome;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
