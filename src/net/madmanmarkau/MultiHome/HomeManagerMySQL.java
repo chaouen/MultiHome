@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 
 public class HomeManagerMySQL extends HomeManager {
@@ -87,16 +89,16 @@ public class HomeManagerMySQL extends HomeManager {
 			if (resultSet.first()) {
 				try {
 					return new HomeEntry(player, name,
-										resultSet.getString("world"), 
-										resultSet.getDouble("x"), 
-										resultSet.getDouble("y"), 
-										resultSet.getDouble("z"), 
-										resultSet.getFloat("yaw"), 
+										resultSet.getString("world"),
+										resultSet.getDouble("x"),
+										resultSet.getDouble("y"),
+										resultSet.getDouble("z"),
+										resultSet.getFloat("yaw"),
 										resultSet.getFloat("pitch"));
 				} catch (Exception ex) {}
 
 			}
-			
+
 		} catch (SQLException e) {
 			Messaging.logSevere("Failed to get home location!", this.plugin);
 			e.printStackTrace();
@@ -145,18 +147,16 @@ public class HomeManagerMySQL extends HomeManager {
 			}
 
 			if (exists) {
-				statement = connection.prepareStatement("UPDATE `homes` SET `owner` = ?, `home` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?, `pitch` = ?, `yaw` = ? WHERE LOWER(`owner`) = LOWER(?) AND LOWER(`home`) = LOWER(?)");
+				statement = connection.prepareStatement("UPDATE `homes` SET `world` = ?, `x` = ?, `y` = ?, `z` = ?, `pitch` = ?, `yaw` = ? WHERE LOWER(`owner`) = LOWER(?) AND LOWER(`home`) = LOWER(?)");
 
-				statement.setString(1, player);
-				statement.setString(2, name);
-				statement.setString(3, location.getWorld().getName());
-				statement.setDouble(4, location.getX());
-				statement.setDouble(5, location.getY());
-				statement.setDouble(6, location.getZ());
-				statement.setFloat(7, location.getPitch());
-				statement.setFloat(8, location.getYaw());
-				statement.setString(9, player);
-				statement.setString(10, name);
+				statement.setString(1, location.getWorld().getName());
+				statement.setDouble(2, location.getX());
+				statement.setDouble(3, location.getY());
+				statement.setDouble(4, location.getZ());
+				statement.setFloat(5, location.getYaw());
+				statement.setFloat(6, location.getPitch());
+				statement.setString(7, player);
+				statement.setString(8, name);
 				statement.execute();
 			} else {
 				statement = connection.prepareStatement("INSERT INTO `homes`(`owner`, `home`, `world`, `x`, `y`, `z`, `pitch`, `yaw`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
@@ -167,8 +167,8 @@ public class HomeManagerMySQL extends HomeManager {
 				statement.setDouble(4, location.getX());
 				statement.setDouble(5, location.getY());
 				statement.setDouble(6, location.getZ());
-				statement.setFloat(7, location.getPitch());
-				statement.setFloat(8, location.getYaw());
+				statement.setFloat(7, location.getYaw());
+				statement.setFloat(8, location.getPitch());
 				statement.execute();
 			}
 
@@ -263,7 +263,7 @@ public class HomeManagerMySQL extends HomeManager {
 				} catch (SQLException ex) {} // Eat errors
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -307,7 +307,7 @@ public class HomeManagerMySQL extends HomeManager {
 				} catch (SQLException ex) {} // Eat errors
 			}
 		}
-		
+
 		return 0;
 	}
 
@@ -329,17 +329,17 @@ public class HomeManagerMySQL extends HomeManager {
 			resultSet = statement.executeQuery();
 			if (resultSet.first()) {
 				do {
-					output.add(new HomeEntry(resultSet.getString("owner"), 
-							resultSet.getString("home"), 
-							resultSet.getString("world"), 
-							resultSet.getDouble("x"), 
-							resultSet.getDouble("y"), 
-							resultSet.getDouble("z"), 
-							resultSet.getFloat("yaw"), 
+					output.add(new HomeEntry(resultSet.getString("owner"),
+							resultSet.getString("home"),
+							resultSet.getString("world"),
+							resultSet.getDouble("x"),
+							resultSet.getDouble("y"),
+							resultSet.getDouble("z"),
+							resultSet.getFloat("yaw"),
 							resultSet.getFloat("pitch")));
 				} while (resultSet.next());
 			}
-			
+
 		} catch (SQLException e) {
 			Messaging.logSevere("Failed to get all home locations for player!", this.plugin);
 			e.printStackTrace();
@@ -384,7 +384,7 @@ public class HomeManagerMySQL extends HomeManager {
 			statementExists = connection.prepareStatement("SELECT COUNT(`id`) FROM `homes` WHERE LOWER(`owner`) = LOWER(?) AND LOWER(`home`) = LOWER(?);");
 			statementInsert = connection.prepareStatement("INSERT INTO `homes`(`owner`, `home`, `world`, `x`, `y`, `z`, `pitch`, `yaw`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 			statementUpdate = connection.prepareStatement("UPDATE `homes` SET `owner` = ?, `home` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?, `pitch` = ?, `yaw` = ? WHERE LOWER(`owner`) = LOWER(?) AND LOWER(`home`) = LOWER(?);");
-		
+
 			for (HomeEntry thisEntry : homes) {
 				// Determine if entry exists.
 				recordExists = false;
@@ -396,7 +396,7 @@ public class HomeManagerMySQL extends HomeManager {
 				}
 				resultSet.close();
 				resultSet = null;
-				
+
 				// Save the entry, if required.
 				if (recordExists) {
 					if (overwrite) {
